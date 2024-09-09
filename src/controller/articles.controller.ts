@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Article } from 'src/model/article.entity';
@@ -27,5 +27,16 @@ export class ArticlesController {
     @Get(':userId')
     async findAllByUser(@Param('userId') userId: string): Promise<Article[]> {
         return this.articlesService.findAllByUser(userId);
+    }
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/approve')
+    async approve(@Param('id') id: string): Promise<Article> {
+        return this.articlesService.approveArticle(+id); // Convert string to number
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/reject')
+    async reject(@Param('id') id: string): Promise<Article> {
+        return this.articlesService.rejectArticle(+id); // Convert string to number
     }
 }

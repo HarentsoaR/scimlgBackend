@@ -12,8 +12,8 @@ export class Article {
     @Column()
     title: string;
 
-    @Column('text')
-    abstract: string;
+    // @Column('text')
+    // abstract: string;
 
     @Column('text')
     content: string;

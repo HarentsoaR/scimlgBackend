@@ -43,4 +43,28 @@ export class ArticlesService {
             where: { user: { id: userIdNumber } }, // Use the converted userIdNumber
         });
     }
+    async approveArticle(articleId: number): Promise<Article> {
+        if (!articleId) {
+            throw new NotFoundException('Article ID must be provided');
+        }
+        const article = await this.articleRepository.findOne({ where: { id: articleId } });
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+        article.status = 'accepted'; // Update the status to approved
+        return this.articleRepository.save(article);
     }
+
+    async rejectArticle(articleId: number): Promise<Article> {
+        if (!articleId) {
+            throw new NotFoundException('Article ID must be provided');
+        }
+
+        const article = await this.articleRepository.findOne({ where: { id: articleId } });
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+        article.status = 'rejected'; // Update the status to rejected
+        return this.articleRepository.save(article);
+    }
+}

@@ -5,9 +5,9 @@ export class CreateArticleDto {
     @IsNotEmpty()
     title: string;
 
-    @IsString()
-    @IsNotEmpty()
-    abstract: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // abstract: string;
 
     @IsString()
     @IsNotEmpty()
