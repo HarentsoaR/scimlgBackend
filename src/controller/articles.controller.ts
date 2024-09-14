@@ -10,7 +10,7 @@ import { JwtAuthGuard } from '../services/jwt-auth.guard';
 
 @Controller('articles')
 export class ArticlesController {
-    constructor(private readonly articlesService: ArticlesService) {}
+    constructor(private readonly articlesService: ArticlesService) { }
 
     @UseGuards(JwtAuthGuard)
     @Post()
@@ -39,4 +39,10 @@ export class ArticlesController {
     async reject(@Param('id') id: string): Promise<Article> {
         return this.articlesService.rejectArticle(+id); // Convert string to number
     }
+    @UseGuards(JwtAuthGuard)
+    @Get(':id/likes') // New route to get users who liked the article
+    async getLikes(@Param('id') id: string): Promise<User[]> {
+        return this.articlesService.getLikesForArticle(+id); // Convert string to number
+    }
+
 }

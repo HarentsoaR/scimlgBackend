@@ -3,6 +3,8 @@ import { Comment } from './comment.entity';
 import { Notification } from './notification.entity';
 import { Article } from './article.entity';
 import { Evaluation } from './evaluation.entity';
+import { Like } from './like.entity';
+
 
 @Entity()
 export class User {
@@ -51,5 +53,7 @@ export class User {
     @OneToMany(() => Notification, notification => notification.user)
     notifications: Notification[];
 
+    @OneToMany(() => Like, like => like.user) // Add this line
+    likes: Like[]; 
     // Add relations for publications, connections, and achievements if needed
 }

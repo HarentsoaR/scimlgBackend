@@ -7,9 +7,10 @@ import { UsersModule } from './modules/users.module';
 import { ArticlesModule } from './modules/articles.module';
 import { EvaluationsModule } from './modules/evaluations.module';
 import { CommentsModule } from './modules/comments.module';
+import { LikesModule } from './modules/likes.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, UsersModule, ArticlesModule, EvaluationsModule, CommentsModule],
+  imports: [DatabaseModule, AuthModule, UsersModule, ArticlesModule, EvaluationsModule, CommentsModule, LikesModule],
   controllers: [AppController],
   providers: [AppService],
 })

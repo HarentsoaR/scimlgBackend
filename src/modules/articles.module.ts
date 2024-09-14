@@ -6,9 +6,11 @@ import { ArticlesController } from '../controller/articles.controller';
 import { Article } from '../model/article.entity';
 import { ArticlesService } from '../services/articles.service';
 import { JwtStrategy } from '../services/jwt.strategy';
+import { Like } from '../model/like.entity';
+import { User } from '../model/user.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Article]),
+    imports: [TypeOrmModule.forFeature([Article, Like, User]),
     ConfigModule.forRoot(), //Load env config
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY, // Replace with your own secret

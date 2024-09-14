@@ -5,6 +5,8 @@ import { Evaluation } from './model/evaluation.entity';
 import { Notification } from './model/notification.entity';
 import { Comment } from './model/comment.entity';
 import { User } from './model/user.entity';
+import { Like } from './model/like.entity';
+
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { User } from './model/user.entity';
       password: '1234', // Your PostgreSQL password
       database: 'scigasy', // Name of your database
       autoLoadEntities: true,
-      entities: [User, Article, Notification, Evaluation, Comment],
+      entities: [User, Article, Notification, Evaluation, Comment, Like],
       synchronize: true, // Automatically create database schema on every application launch
     }),
   ],

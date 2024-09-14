@@ -20,18 +20,33 @@ export class ArticlesService {
         });
         return this.articleRepository.save(article);
     }
+
     async findAll(): Promise<Article[]> {
         try {
-            const articles = await this.articleRepository.find({ relations: ['user', 'evaluations', 'comments'] }); // Adjust relations as needed
+            const articles = await this.articleRepository.find({
+                relations: ['user', 'evaluations', 'comments', 'likes', 'likes.user'],
+            });
+
             if (!articles.length) {
                 throw new NotFoundException('No articles found.');
             }
-            return articles;
+
+            // Map articles to include likeCounts
+            const articlesWithLikeCounts = articles.map(article => {
+                const likeCounts = article.likes ? article.likes.length : 0; // Count the likes
+                return {
+                    ...article,
+                    likeCounts, // Add the likeCounts field
+                };
+            });
+
+            return articlesWithLikeCounts;
         } catch (error) {
             // Handle specific errors if needed
             throw new Error('Error retrieving articles: ' + error.message);
         }
     }
+
 
     async findAllByUser(userId: string): Promise<Article[]> {
         const userIdNumber = parseInt(userId, 10); // Convert string to number
@@ -67,4 +82,20 @@ export class ArticlesService {
         article.status = 'rejected'; // Update the status to rejected
         return this.articleRepository.save(article);
     }
+
+    async getLikesForArticle(articleId: number): Promise<User[]> {
+        const article = await this.articleRepository.findOne({
+            where: { id: articleId },
+            relations: ['likes', 'likes.user'], // Ensure you fetch likes and their associated users
+        });
+
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+
+        // Return the users who liked the article
+        return article.likes.map(like => like.user);
+    }
+
+
 }

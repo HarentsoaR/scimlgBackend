@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from './user.entity';
 import { Evaluation } from './evaluation.entity';
 import { Comment } from './comment.entity';
+import { Like } from './like.entity';
 
 
 @Entity()
@@ -35,4 +36,7 @@ export class Article {
 
     @OneToMany(() => Comment, comment => comment.article)
     comments: Comment[];
+
+    @OneToMany(() => Like, like => like.article)
+    likes: Like[];
 }
