@@ -20,23 +20,35 @@ export class LikesService {
             where: { id: articleId },
             relations: ['likes', 'likes.user'] // Ensure user details are included
         });
-    
+
         if (!article) {
             throw new NotFoundException('Article not found');
         }
-    
+
         // Check if the user has already liked the article
         const existingLike = article.likes.find(like => like.user && like.user.id === user.id);
-        
+
         if (existingLike) {
             // If the user has already liked, remove the like (dislike)
             await this.likeRepository.remove(existingLike);
             return existingLike; // Return the removed like for confirmation
         }
-    
+
         // Create a new like
         const like = this.likeRepository.create({ article, user });
         return this.likeRepository.save(like);
-    }    
+    }
 
+    async hasUserLikedArticle(articleId: number, user: User): Promise<boolean> {
+        const article = await this.articleRepository.findOne({
+            where: { id: articleId },
+            relations: ['likes', 'likes.user'],
+        });
+
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+
+        return article.likes.some(like => like.user?.id === user.id);
+    }
 }
