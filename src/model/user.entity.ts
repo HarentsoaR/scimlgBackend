@@ -4,6 +4,7 @@ import { Notification } from './notification.entity';
 import { Article } from './article.entity';
 import { Evaluation } from './evaluation.entity';
 import { Like } from './like.entity';
+import { Follow } from './follow.entity';
 
 
 @Entity()
@@ -55,5 +56,10 @@ export class User {
 
     @OneToMany(() => Like, like => like.user) // Add this line
     likes: Like[]; 
-    // Add relations for publications, connections, and achievements if needed
+    
+    @OneToMany(() => Follow, follow => follow.followed) // Followers
+    followers: Follow[];
+
+    @OneToMany(() => Follow, follow => follow.follower) // Following
+    following: Follow[];
 }

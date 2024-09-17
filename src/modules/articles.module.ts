@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticlesController } from '../controller/articles.controller';
+import { User } from '../model/user.entity';
+import { Like } from '../model/like.entity';
 import { Article } from '../model/article.entity';
 import { ArticlesService } from '../services/articles.service';
-import { JwtStrategy } from '../services/jwt.strategy';
-import { Like } from '../model/like.entity';
-import { User } from '../model/user.entity';
+
 
 @Module({
     imports: [TypeOrmModule.forFeature([Article, Like, User]),

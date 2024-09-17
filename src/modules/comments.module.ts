@@ -3,12 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticlesService } from '../services/articles.service';
-import { Article } from '../model/article.entity';
-import { Comment } from '../model/comment.entity';
-import { User } from '../model/user.entity';
-import { CommentsController } from '../controller/comments.controller';
 import { CommentsService } from '../services/comments.service';
 import { UsersService } from '../services/users.service';
+import { Article } from '../model/article.entity';
+import { User } from '../model/user.entity';
+import { CommentsController } from '../controller/comments.controller';
+import { Comment } from '../model/comment.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Comment]),TypeOrmModule.forFeature([Article]),TypeOrmModule.forFeature([User]),

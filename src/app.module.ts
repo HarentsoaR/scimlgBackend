@@ -8,9 +8,10 @@ import { ArticlesModule } from './modules/articles.module';
 import { EvaluationsModule } from './modules/evaluations.module';
 import { CommentsModule } from './modules/comments.module';
 import { LikesModule } from './modules/likes.module';
+import { FollowModule } from './modules/follow.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, UsersModule, ArticlesModule, EvaluationsModule, CommentsModule, LikesModule],
+  imports: [DatabaseModule, AuthModule, UsersModule, ArticlesModule, EvaluationsModule, CommentsModule, LikesModule, FollowModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,10 +1,10 @@
 import { Controller, Post, Body, Req, UseGuards, Get } from '@nestjs/common';
 import { EvaluationsService } from '../services/evaluations.service';
-import { CreateEvaluationDto } from '../model/dto/evaluation/create-evaluation.dto';
-import { Evaluation } from '../model/evaluation.entity';
 import { Request } from 'express';
-import { User } from '../model/user.entity';
 import { JwtAuthGuard } from '../services/jwt-auth.guard';
+import { CreateEvaluationDto } from '../model/dto/evaluation/create-evaluation.dto';
+import { User } from '../model/user.entity';
+import { Evaluation } from '../model/evaluation.entity';
 
 
 @Controller('evaluations')

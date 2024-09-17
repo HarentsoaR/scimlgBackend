@@ -4,7 +4,7 @@ import { Request } from 'express';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(private readonly jwtService: JwtService) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request: Request = context.switchToHttp().getRequest();
@@ -20,10 +20,13 @@ export class JwtAuthGuard implements CanActivate {
         }
 
         try {
+            // console.log('Token received:', token); // Log the token
             const payload = await this.jwtService.verifyAsync(token);
+            // console.log('Token payload:', payload); // Log the payload
             request.user = payload; // Attach user info to request
             return true;
         } catch (error) {
+            console.error('Token verification error:', error); // Log the error
             throw new UnauthorizedException('Invalid token.');
         }
     }

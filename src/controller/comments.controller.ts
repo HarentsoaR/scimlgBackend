@@ -1,9 +1,9 @@
 import { Controller, Post, Get, Param, Body, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { CreateCommentDto } from '../model/dto/comment/create-comment.dto';
 import { CommentsService } from '../services/comments.service';
 import { JwtAuthGuard } from '../services/jwt-auth.guard';
-import { Comment } from 'src/model/comment.entity';
+import { CreateCommentDto } from '../model/dto/comment/create-comment.dto';
+import { Comment } from '../model/comment.entity';
 
 @Controller('articles')
 export class CommentsController {

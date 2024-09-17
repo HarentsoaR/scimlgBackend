@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Like } from '../model/like.entity';
-import { Article } from '../model/article.entity';
-import { User } from '../model/user.entity';
 import { LikesService } from '../services/likes.service';
 import { LikesController } from '../controller/likes.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { Like } from '../model/like.entity';
+import { Article } from '../model/article.entity';
+import { User } from '../model/user.entity';
 
 
 

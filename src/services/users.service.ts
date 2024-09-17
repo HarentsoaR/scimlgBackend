@@ -84,10 +84,10 @@ export class UsersService {
       // Validate the access token
       const isAdmin = accessToken ? await this.validateAccessToken(accessToken) : false;
 
-      // If the user is not an admin and an access token was provided, throw an exception
-      if (accessToken && !isAdmin) {
-        throw new ForbiddenException('Only admins can access this resource');
-      }
+      // // If the user is not an admin and an access token was provided, throw an exception
+      // if (accessToken && !isAdmin) {
+      //   throw new ForbiddenException('Only admins can access this resource');
+      // }
 
       // Proceed with the query to get all users
       return await this.userRepository.find();
