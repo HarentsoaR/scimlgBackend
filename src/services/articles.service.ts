@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
 import { User } from '../model/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 
 @Injectable()
@@ -58,6 +58,31 @@ export class ArticlesService {
             where: { user: { id: userIdNumber } }, // Use the converted userIdNumber
         });
     }
+
+    async findAllByUserIds(userIds: number[]): Promise<Article[]> {
+        if (!Array.isArray(userIds) || userIds.length === 0) {
+            return []; // Return an empty array if no user IDs
+        }
+
+        // Fetch articles for all followed users
+        const articles = await this.articleRepository.find({
+            where: { user: { id: In(userIds) } },
+            relations: ['user', 'likes'], // Include user and likes information
+        });
+
+        // Map articles to include likeCounts
+        const articlesWithLikeCounts = articles.map(article => {
+            const likeCounts = article.likes ? article.likes.length : 0; // Count the likes
+            return {
+                ...article,
+                likeCounts, // Add the likeCounts field
+            };
+        });
+
+        return articlesWithLikeCounts; // Return the modified articles
+    }
+
+
     async approveArticle(articleId: number): Promise<Article> {
         if (!articleId) {
             throw new NotFoundException('Article ID must be provided');
@@ -96,6 +121,4 @@ export class ArticlesService {
         // Return the users who liked the article
         return article.likes.map(like => like.user);
     }
-
-
 }

@@ -7,6 +7,7 @@ import { Comment } from './model/comment.entity';
 import { User } from './model/user.entity';
 import { Like } from './model/like.entity';
 import { Follow } from './model/follow.entity';
+import { Active } from './model/active.entity';
 
 
 @Module({
@@ -19,7 +20,8 @@ import { Follow } from './model/follow.entity';
       password: '1234', // Your PostgreSQL password
       database: 'scigasy', // Name of your database
       autoLoadEntities: true,
-      entities: [User, Article, Notification, Evaluation, Comment, Like, Follow],
+      entities: [User, Article, Notification, Evaluation, Comment, Like, Follow, Active],
+      // logging: true,
       synchronize: true, // Automatically create database schema on every application launch
     }),
   ],

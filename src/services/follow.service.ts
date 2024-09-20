@@ -64,34 +64,43 @@ export class FollowService {
         return user.following.map(follow => follow.followed);
     }
 
+    async getFollowings(userId: number): Promise<number[]> {
+        const following = await this.followRepository.find({
+            where: { follower: { id: userId } },
+        });
+
+        return following.map(follow => follow.followed.id); // Return the IDs of the followed users
+    }
+
+
     async countFollowers(userId: number): Promise<number> {
         const user = await this.userRepository.findOne({
             where: { id: userId },
             relations: ['followers'],
         });
-    
+
         if (!user) {
             throw new NotFoundException("User not found");
         }
-    
+
         // Return the count of followers
         return user.followers.length;
     }
-    
+
     async countFollowing(userId: number): Promise<number> {
         const user = await this.userRepository.findOne({
             where: { id: userId },
             relations: ['following'],
         });
-    
+
         if (!user) {
             throw new NotFoundException("User not found");
         }
-    
+
         // Return the count of following
         return user.following.length;
     }
-    
+
 
     async isUserFollowingUser(followerId: number, followedId: number): Promise<boolean> {
         const followRecord = await this.followRepository.findOne({

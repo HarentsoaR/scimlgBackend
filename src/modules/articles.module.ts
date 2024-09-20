@@ -7,16 +7,18 @@ import { User } from '../model/user.entity';
 import { Like } from '../model/like.entity';
 import { Article } from '../model/article.entity';
 import { ArticlesService } from '../services/articles.service';
+import { FollowService } from '../services/follow.service';
+import { Follow } from '../model/follow.entity';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Article, Like, User]),
+    imports: [TypeOrmModule.forFeature([Article, Like, User, Follow]),
     ConfigModule.forRoot(), //Load env config
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY, // Replace with your own secret
       signOptions: { expiresIn: '1h' }, // Token expiration time
     })],
     controllers: [ArticlesController],
-    providers: [ArticlesService],
+    providers: [ArticlesService, FollowService],
 })
 export class ArticlesModule {}

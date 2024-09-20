@@ -1,16 +1,20 @@
 import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { Article } from 'src/model/article.entity';
+import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
 import { User } from '../model/user.entity';
 import { ArticlesService } from '../services/articles.service';
 import { JwtAuthGuard } from '../services/jwt-auth.guard';
+import { CustomRequest } from '../interfaces/request.interface';
+import { FollowService } from '../services/follow.service';
 
 
 @Controller('articles')
 export class ArticlesController {
-    constructor(private readonly articlesService: ArticlesService) { }
+    constructor(private readonly articlesService: ArticlesService,
+                private readonly followService: FollowService
+    ) { }
 
     @UseGuards(JwtAuthGuard)
     @Post()
@@ -24,10 +28,11 @@ export class ArticlesController {
         return this.articlesService.findAll();
     }
     @UseGuards(JwtAuthGuard)
-    @Get(':userId')
+    @Get(':userId/user')
     async findAllByUser(@Param('userId') userId: string): Promise<Article[]> {
         return this.articlesService.findAllByUser(userId);
     }
+    
     @UseGuards(JwtAuthGuard)
     @Patch(':id/approve')
     async approve(@Param('id') id: string): Promise<Article> {
@@ -39,10 +44,19 @@ export class ArticlesController {
     async reject(@Param('id') id: string): Promise<Article> {
         return this.articlesService.rejectArticle(+id); // Convert string to number
     }
+
     @UseGuards(JwtAuthGuard)
     @Get(':id/likes') // New route to get users who liked the article
     async getLikes(@Param('id') id: string): Promise<User[]> {
         return this.articlesService.getLikesForArticle(+id); // Convert string to number
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('followed')
+    async findAllFromFollowedUsers(@Req() req: CustomRequest): Promise<Article[]> {
+        const userId = req.user.id;
+        const followedUserIds = await this.followService.getFollowings(userId); // Get followed user IDs
+        return this.articlesService.findAllByUserIds(followedUserIds); // Fetch articles for those user IDs
     }
 
 }

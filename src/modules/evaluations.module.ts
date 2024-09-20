@@ -7,9 +7,10 @@ import { EvaluationsService } from '../services/evaluations.service';
 import { ArticlesService } from '../services/articles.service';
 import { Evaluation } from '../model/evaluation.entity';
 import { Article } from '../model/article.entity';
+import { User } from '../model/user.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Evaluation]),TypeOrmModule.forFeature([Article]),
+    imports: [TypeOrmModule.forFeature([Evaluation]),TypeOrmModule.forFeature([Article, User]),
     ConfigModule.forRoot(), //Load env config
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY, // Replace with your own secret
