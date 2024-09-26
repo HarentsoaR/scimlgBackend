@@ -113,5 +113,15 @@ export class FollowService {
         return !!followRecord; // Return true if the record exists, false otherwise
     }
 
+    async getUserById(userId: number): Promise<User> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+    
+        return user;
+    }
+
 
 }

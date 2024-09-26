@@ -121,4 +121,23 @@ export class ArticlesService {
         // Return the users who liked the article
         return article.likes.map(like => like.user);
     }
+
+    async getArticleById(articleId: number): Promise<Article> {
+        const article = await this.articleRepository.findOne({
+            where: { id: articleId },
+            relations: ['user', 'likes', 'comments'], // Include related entities
+        });
+    
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+    
+        // Optionally, you can add likeCounts here if needed
+        const likeCounts = article.likes ? article.likes.length : 0; // Count the likes
+        return {
+            ...article,
+            // likeCounts, // Add the likeCounts field if needed
+        };
+    }
+    
 }

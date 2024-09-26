@@ -9,16 +9,18 @@ import { Article } from '../model/article.entity';
 import { ArticlesService } from '../services/articles.service';
 import { FollowService } from '../services/follow.service';
 import { Follow } from '../model/follow.entity';
+import { NotificationService } from '../services/notifications.service';
+import { Notification } from '../model/notification.entity';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Article, Like, User, Follow]),
+    imports: [TypeOrmModule.forFeature([Article, Like, User, Follow, Notification]),
     ConfigModule.forRoot(), //Load env config
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY, // Replace with your own secret
       signOptions: { expiresIn: '1h' }, // Token expiration time
     })],
     controllers: [ArticlesController],
-    providers: [ArticlesService, FollowService],
+    providers: [ArticlesService, FollowService, NotificationService],
 })
 export class ArticlesModule {}

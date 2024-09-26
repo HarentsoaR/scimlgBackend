@@ -9,15 +9,17 @@ import { Article } from '../model/article.entity';
 import { User } from '../model/user.entity';
 import { CommentsController } from '../controller/comments.controller';
 import { Comment } from '../model/comment.entity';
+import { NotificationService } from '../services/notifications.service';
+import { Notification } from '../model/notification.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Comment]),TypeOrmModule.forFeature([Article]),TypeOrmModule.forFeature([User]),
+    imports: [TypeOrmModule.forFeature([Comment]),TypeOrmModule.forFeature([Article]),TypeOrmModule.forFeature([User]),TypeOrmModule.forFeature([Notification]),
     ConfigModule.forRoot(), //Load env config
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY, // Replace with your own secret
       signOptions: { expiresIn: '1h' }, // Token expiration time
     })],
     controllers: [CommentsController],
-    providers: [CommentsService, ArticlesService, UsersService],
+    providers: [CommentsService, ArticlesService, UsersService, NotificationService],
 })
 export class CommentsModule {}

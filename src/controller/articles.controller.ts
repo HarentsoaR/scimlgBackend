@@ -1,5 +1,4 @@
 import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
@@ -8,20 +7,35 @@ import { ArticlesService } from '../services/articles.service';
 import { JwtAuthGuard } from '../services/jwt-auth.guard';
 import { CustomRequest } from '../interfaces/request.interface';
 import { FollowService } from '../services/follow.service';
+import { NotificationService } from '../services/notifications.service';
 
 
 @Controller('articles')
 export class ArticlesController {
     constructor(private readonly articlesService: ArticlesService,
-                private readonly followService: FollowService
+        private readonly followService: FollowService,
+        private readonly notificationService: NotificationService
     ) { }
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async create(@Body() createArticleDto: CreateArticleDto, @Req() req: Request): Promise<Article> {
+    async create(@Body() createArticleDto: CreateArticleDto, @Req() req: CustomRequest): Promise<Article> {
         const user = req.user as User; // Assuming user is attached to the request by the JWT guard
-        return this.articlesService.createArticle(createArticleDto, user);
+
+        // Create the article
+        const article = await this.articlesService.createArticle(createArticleDto, user);
+
+        // Fetch followers of the user
+        const followers = await this.followService.getFollowers(user.id); // Implement this method in FollowService
+
+        // Notify each follower about the new article
+        followers.forEach(async (follower) => {
+            await this.notificationService.createNotification(follower, `${user.username} has posted a new article: ${article.title}`);
+        });
+
+        return article;
     }
+
     @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(): Promise<Article[]> {
@@ -32,7 +46,7 @@ export class ArticlesController {
     async findAllByUser(@Param('userId') userId: string): Promise<Article[]> {
         return this.articlesService.findAllByUser(userId);
     }
-    
+
     @UseGuards(JwtAuthGuard)
     @Patch(':id/approve')
     async approve(@Param('id') id: string): Promise<Article> {

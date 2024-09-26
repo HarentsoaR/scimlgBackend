@@ -37,6 +37,6 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     async validate(payload: any) {
-        return { id: payload.id, email: payload.email, role: payload.role }; // Ensure this matches your payload structure
+        return { id: payload.id, email: payload.email, role: payload.role, name: payload.username }; // Ensure this matches your payload structure
     }
 }

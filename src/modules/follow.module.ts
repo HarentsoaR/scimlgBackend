@@ -8,16 +8,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { Follow } from '../model/follow.entity';
 import { User } from '../model/user.entity';
+import { NotificationService } from '../services/notifications.service';
+import { Notification } from '../model/notification.entity';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Follow, User]), ConfigModule.forRoot(),
+        TypeOrmModule.forFeature([Follow, User, Notification]), ConfigModule.forRoot(),
         JwtModule.register({
             secret: process.env.JWT_SECRET_KEY,
             signOptions: { expiresIn: '1h' },
         })],
-    providers: [FollowService, UsersService],
+    providers: [FollowService, UsersService, NotificationService],
     controllers: [FollowController],
     exports: [FollowService],
 })
