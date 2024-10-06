@@ -51,6 +51,21 @@ export class UsersController {
       throw new Error('An error occurred while fetching user data');
     }
   }
+
+  
+  @Get('username/:username')
+  async getUserByUsername(@Param('username') username: string): Promise<User> {
+    try {
+      return await this.userService.findByUsername(username);
+    } catch (error) {
+      // Handle NotFoundException and other errors
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new Error('An error occurred while fetching user data');
+    }
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   async update(@Param('id') id: number, @Body() userData: Partial<User>, @Req() req: Request): Promise<User> {

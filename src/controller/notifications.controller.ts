@@ -24,4 +24,10 @@ export class NotificationController {
     async markAsRead(@Param('id') id: number): Promise<Notification> {
         return this.notificationService.markAsRead(id);
     }
+    
+    @Get(':id/read-status')
+    async checkReadStatus(@Param('id') id: number): Promise<{ isRead: boolean }> {
+        const isRead = await this.notificationService.isNotificationRead(id);
+        return { isRead };
+    }
 }

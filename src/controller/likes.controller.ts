@@ -27,7 +27,7 @@ export class LikesController {
         if (!existingLike) {
             // Notify the author of the article about the new like
             try {
-                await this.notificationService.createNotification(article.user, `${user.username} liked your article.`);
+                await this.notificationService.createNotification(article.user, `${user.username} liked your article: ${article.title} `);
             } catch (error) {
                 console.error(`Failed to notify user ${article.user.id}:`, error);
             }

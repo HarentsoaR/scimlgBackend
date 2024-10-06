@@ -72,5 +72,10 @@ export class ArticlesController {
         const followedUserIds = await this.followService.getFollowings(userId); // Get followed user IDs
         return this.articlesService.findAllByUserIds(followedUserIds); // Fetch articles for those user IDs
     }
-
+    
+    @UseGuards(JwtAuthGuard)
+    @Get('search/title/:title')
+    async searchArticlesByTitle(@Param('title') title: string): Promise<Article[]> {
+        return this.articlesService.findByTitle(title);
+    }
 }

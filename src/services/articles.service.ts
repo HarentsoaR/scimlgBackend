@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
 import { User } from '../model/user.entity';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Like } from 'typeorm';
 
 
 @Injectable()
@@ -138,6 +138,28 @@ export class ArticlesService {
             ...article,
             // likeCounts, // Add the likeCounts field if needed
         };
+    }
+
+    async findByTitle(title: string): Promise<Article[]> {
+        const articles = await this.articleRepository.find({
+            where: { title: Like(`%${title}%`) }, // Use LIKE for partial matches
+            relations: ['user', 'evaluations', 'comments', 'likes', 'likes.user'],
+        });
+
+        if (!articles.length) {
+            throw new NotFoundException('No articles found with that title.');
+        }
+
+        // Map articles to include likeCounts
+        const articlesWithLikeCounts = articles.map(article => {
+            const likeCounts = article.likes ? article.likes.length : 0; // Count the likes
+            return {
+                ...article,
+                likeCounts, // Add the likeCounts field
+            };
+        });
+
+        return articlesWithLikeCounts;
     }
     
 }
