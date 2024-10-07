@@ -5,6 +5,7 @@ import { Evaluation } from '../model/evaluation.entity';
 import { Repository } from 'typeorm';
 import { CreateEvaluationDto } from '../model/dto/evaluation/create-evaluation.dto';
 import { User } from '../model/user.entity';
+import { UpdateRatingDto } from '../model/dto/evaluation/updateRatingDto';
 
 
 
@@ -42,4 +43,34 @@ export class EvaluationsService {
 
         return this.evaluationRepository.find({ relations: ['article', 'evaluator'] }); // Adjust relations as needed
     }
+
+    async getRatingForPublication(publicationId: number): Promise<number> {
+        const evaluations = await this.evaluationRepository.find({
+            where: { article: { id: publicationId } },
+        });
+
+        // Calculate the average rating if needed, or return the most recent rating
+        if (evaluations.length === 0) {
+            return 0; // No ratings found
+        }
+
+        const totalRating = evaluations.reduce((sum, evaluation) => sum + evaluation.rating, 0);
+        return totalRating / evaluations.length; // Return average rating
+    }
+
+    async getUserRating(publicationId: number, userId: number): Promise<any> {
+        return this.evaluationRepository.findOne({
+            where: {
+                article: { id: publicationId },
+                evaluator: { id: userId }, // Change 'user' to 'evaluator'
+            },
+        });
+    }
+
+    async updateRating(id: number, updateRatingDto: UpdateRatingDto): Promise<any> {
+        await this.evaluationRepository.update(id, updateRatingDto);
+        return this.evaluationRepository.findOne({ where: { id } }); // Return the updated rating
+    }
+
+
 }

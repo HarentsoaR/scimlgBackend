@@ -13,14 +13,8 @@ export class Evaluation {
     @ManyToOne(() => User, user => user.evaluations)
     evaluator: User;
 
-    @Column('text')
-    comments: string;
-
     @Column({ type: 'int', default: 0 })
     rating: number;
-
-    @Column({ type: 'enum', enum: ['pending', 'completed'] })
-    status: 'pending' | 'completed';
 
     @CreateDateColumn()
     createdAt: Date;

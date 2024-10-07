@@ -4,13 +4,9 @@ export class CreateEvaluationDto {
     @IsNotEmpty()
     articleId: number;
 
-    @IsString()
     @IsNotEmpty()
-    comments: string;
+    evaluatorId: number;
 
     @IsInt()
     rating: number;
-
-    @IsEnum(['pending', 'completed'])
-    status: 'pending' | 'completed';
 }
