@@ -4,6 +4,7 @@ import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
 import { User } from '../model/user.entity';
 import { Repository, In, Like } from 'typeorm';
+import { UpdateArticleDto } from '../model/dto/articles/update-article.dto';
 
 
 @Injectable()
@@ -127,11 +128,11 @@ export class ArticlesService {
             where: { id: articleId },
             relations: ['user', 'likes', 'comments'], // Include related entities
         });
-    
+
         if (!article) {
             throw new NotFoundException('Article not found');
         }
-    
+
         // Optionally, you can add likeCounts here if needed
         const likeCounts = article.likes ? article.likes.length : 0; // Count the likes
         return {
@@ -161,5 +162,16 @@ export class ArticlesService {
 
         return articlesWithLikeCounts;
     }
-    
+
+    async updateArticle(articleId: number, updateArticleDto: UpdateArticleDto): Promise<Article> {
+        const article = await this.articleRepository.findOne({ where: { id: articleId } });
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+
+        // Update the article properties
+        Object.assign(article, updateArticleDto);
+        return this.articleRepository.save(article);
+    }
+
 }

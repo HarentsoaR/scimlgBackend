@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch, Put } from '@nestjs/common';
 import { Request } from 'express';
 import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
@@ -8,6 +8,7 @@ import { JwtAuthGuard } from '../services/jwt-auth.guard';
 import { CustomRequest } from '../interfaces/request.interface';
 import { FollowService } from '../services/follow.service';
 import { NotificationService } from '../services/notifications.service';
+import { UpdateArticleDto } from '../model/dto/articles/update-article.dto';
 
 
 @Controller('articles')
@@ -77,5 +78,13 @@ export class ArticlesController {
     @Get('search/title/:title')
     async searchArticlesByTitle(@Param('title') title: string): Promise<Article[]> {
         return this.articlesService.findByTitle(title);
+    }
+    @UseGuards(JwtAuthGuard) // Protect the route with authentication
+    @Put(':id')
+    async updateArticle(
+        @Param('id') id: number,
+        @Body() updateArticleDto: UpdateArticleDto,
+    ): Promise<Article> {
+        return this.articlesService.updateArticle(id, updateArticleDto);
     }
 }

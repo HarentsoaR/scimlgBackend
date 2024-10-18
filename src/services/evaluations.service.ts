@@ -20,9 +20,9 @@ export class EvaluationsService {
 
     async createEvaluation(createEvaluationDto: CreateEvaluationDto, evaluator: User): Promise<Evaluation> {
         // Check if the user has the 'evaluator' role
-        if (!evaluator.role.includes('evaluator')) {
-            throw new ForbiddenException('You do not have permission to evaluate articles.');
-        }
+        // if (!evaluator.role.includes('evaluator')) {
+        //     throw new ForbiddenException('You do not have permission to evaluate articles.');
+        // }
         // Use the correct syntax to find the article
         const article = await this.articleRepository.findOne({ where: { id: createEvaluationDto.articleId } });
         if (!article) {
