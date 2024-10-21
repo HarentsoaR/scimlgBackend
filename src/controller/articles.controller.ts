@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch, Put } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Get, Param, Patch, Put, Delete } from '@nestjs/common';
 import { Request } from 'express';
 import { Article } from '../model/article.entity';
 import { CreateArticleDto } from '../model/dto/articles/create-article.dto';
@@ -73,7 +73,7 @@ export class ArticlesController {
         const followedUserIds = await this.followService.getFollowings(userId); // Get followed user IDs
         return this.articlesService.findAllByUserIds(followedUserIds); // Fetch articles for those user IDs
     }
-    
+
     @UseGuards(JwtAuthGuard)
     @Get('search/title/:title')
     async searchArticlesByTitle(@Param('title') title: string): Promise<Article[]> {
@@ -86,5 +86,17 @@ export class ArticlesController {
         @Body() updateArticleDto: UpdateArticleDto,
     ): Promise<Article> {
         return this.articlesService.updateArticle(id, updateArticleDto);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(':id')
+    async deleteArticle(@Param('id') id: number): Promise<void> {
+        return this.articlesService.deleteArticle(id);
+    }
+
+    @Get('statistics/count')
+    @UseGuards(JwtAuthGuard) // Optional: Require authentication if needed
+    async getUserCount(): Promise<number> {
+        return this.articlesService.countArticles();
     }
 }

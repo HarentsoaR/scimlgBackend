@@ -174,4 +174,18 @@ export class ArticlesService {
         return this.articleRepository.save(article);
     }
 
+    async deleteArticle(articleId: number): Promise<void> {
+        const article = await this.articleRepository.findOne({ where: { id: articleId } });
+        if (!article) {
+            throw new NotFoundException('Article not found');
+        }
+        await this.articleRepository.remove(article);
+    }
+
+    async countArticles(): Promise<number> {
+        const count = await this.articleRepository.createQueryBuilder('article')
+          .getCount();
+        return count;
+      }
+
 }

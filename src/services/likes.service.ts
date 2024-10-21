@@ -51,4 +51,22 @@ export class LikesService {
 
         return article.likes.some(like => like.user?.id === user.id);
     }
+
+
+    async getMostLikedArticles(): Promise<{ title: string; likeCount: number }[]> {
+        const result = await this.likeRepository
+            .createQueryBuilder('like')
+            .select('article.title', 'title')
+            .addSelect('COUNT(like.id)', 'likeCount') // This is an alias, not a column
+            .innerJoin('like.article', 'article') // Join with the Article entity
+            .groupBy('article.id') // Group by article ID
+            .addGroupBy('article.title') // Also group by title to avoid SQL errors
+            .getRawMany();
+    
+        return result.map(item => ({
+            title: item.title,
+            likeCount: parseInt(item.likeCount, 10) || 0, // Ensure likeCount is a number
+        }));
+    }
+    
 }

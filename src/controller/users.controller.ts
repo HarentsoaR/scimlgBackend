@@ -89,5 +89,11 @@ export class UsersController {
 
     return this.userService.deleteUser(id, accessToken);
   }
+
+  @Get('statistics/count')
+  @UseGuards(JwtAuthGuard) // Optional: Require authentication if needed
+  async getUserCount(): Promise<number> {
+    return this.userService.countUsers();
+  }
   
 }

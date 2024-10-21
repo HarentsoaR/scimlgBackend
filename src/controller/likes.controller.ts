@@ -24,10 +24,13 @@ export class LikesController {
         // Fetch the article with likes to check for existing like
         const existingLike = await this.likesService.hasUserLikedArticle(articleId, user);
 
-        if (!existingLike) {
-            // Notify the author of the article about the new like
+        // Check if the current user is the author of the article
+        const isAuthor = article.user.id === user.id;
+
+        if (!existingLike && !isAuthor) {
+            // Notify the author of the article about the new like only if the user is not the author
             try {
-                await this.notificationService.createNotification(article.user, `${user.username} liked your article: ${article.title} `);
+                await this.notificationService.createNotification(article.user, `${user.username} liked your article: ${article.title}`);
             } catch (error) {
                 console.error(`Failed to notify user ${article.user.id}:`, error);
             }
@@ -43,5 +46,11 @@ export class LikesController {
     async checkUserLike(@Param('articleId') articleId: number, @Req() req: CustomRequest): Promise<boolean> {
         const user = req.user; // Now this will be of type User
         return this.likesService.hasUserLikedArticle(articleId, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('statistics/most-liked')
+    async getMostLikedArticles(@Req() req: CustomRequest): Promise<{ title: string; likeCount: number }[]> {
+        return this.likesService.getMostLikedArticles();
     }
 }

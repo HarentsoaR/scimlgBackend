@@ -127,4 +127,9 @@ export class UsersService {
     return user;
   }
   
+  async countUsers(): Promise<number> {
+    const count = await this.userRepository.createQueryBuilder('user')
+      .getCount();
+    return count;
+  }
 }
