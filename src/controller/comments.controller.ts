@@ -1,11 +1,11 @@
 import { Controller, Post, Get, Param, Body, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
 import { CommentsService } from '../services/comments.service';
 import { JwtAuthGuard } from '../services/jwt-auth.guard';
 import { CreateCommentDto } from '../model/dto/comment/create-comment.dto';
 import { Comment } from '../model/comment.entity';
 import { NotificationService } from '../services/notifications.service';
 import { ArticlesService } from '../services/articles.service';
+import { CustomRequest } from '../interfaces/request.interface';
 
 @Controller('comments')
 export class CommentsController {
@@ -58,5 +58,10 @@ export class CommentsController {
     @Get(':articleId/comments')
     async getComments(@Param('articleId') articleId: number): Promise<Comment[]> {
         return this.commentsService.getCommentsByArticle(articleId);
+    }
+
+    @Get('statistics/most-commented')
+    async getMostCommentedArticles(@Req() req: CustomRequest): Promise<{ title: string; commentCount: number }[]> {
+        return this.commentsService.getMostCommentedArticles();
     }
 }

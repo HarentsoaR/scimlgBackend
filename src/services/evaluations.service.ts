@@ -72,5 +72,22 @@ export class EvaluationsService {
         return this.evaluationRepository.findOne({ where: { id } }); // Return the updated rating
     }
 
+    async getRatingStatistics(): Promise<{ title: string; averageRating: number; totalRatings: number }[]> {
+        const result = await this.evaluationRepository
+            .createQueryBuilder('evaluation')
+            .select('article.title', 'title')
+            .addSelect('AVG(evaluation.rating)', 'averageRating') // Calculate average rating
+            .addSelect('COUNT(evaluation.id)', 'totalRatings') // Count the number of ratings
+            .innerJoin('evaluation.article', 'article') // Join with Article entity
+            .groupBy('article.id') // Group by article ID
+            .addGroupBy('article.title') // Group by title to avoid SQL errors
+            .getRawMany();
+    
+        return result.map(item => ({
+            title: item.title,
+            averageRating: parseFloat(item.averageRating) || 0, // Ensure averageRating is a number
+            totalRatings: parseInt(item.totalRatings, 10) || 0, // Ensure totalRatings is a number
+        }));
+    }    
 
 }

@@ -44,4 +44,21 @@ export class CommentsService {
             .where('comment.articleId = :articleId', { articleId })
             .getMany();
     }
+
+
+    async getMostCommentedArticles(): Promise<{ title: string; commentCount: number }[]> {
+        const result = await this.commentRepository
+            .createQueryBuilder('comment')
+            .select('article.title', 'title')
+            .addSelect('COUNT(article.id)', 'commentCount') // This is an alias, not a column
+            .leftJoin('comment.article', 'article') // Join with the Article entity
+            .groupBy('article.id') // Group by article ID
+            .addGroupBy('article.title') // Also group by title to avoid SQL errors
+            .getRawMany();
+    
+        return result.map(item => ({
+            title: item.title,
+            commentCount: parseInt(item.commentCount), // Ensure likeCount is a number
+        }));
+    }
 }

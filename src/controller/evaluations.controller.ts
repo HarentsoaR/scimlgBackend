@@ -58,5 +58,10 @@ export class EvaluationsController {
         return this.evaluationsService.updateRating(id, updateRatingDto);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('statistics')
+    async getRatingStatistics(): Promise<any> {
+        return this.evaluationsService.getRatingStatistics();
+    }
 
 }
